@@ -1,0 +1,10 @@
+[general]
+  case = "trigger_paris"
+[general.plugin_registry.plugins]
+  trigger_plugin = "/home/kmw/projects/Deode-Prototype"
+[suite_control]
+  suite_definition = "TriggerSuiteDefinition"
+[submission]
+  submit_types = ["background_hpc",
+                  "serial"]
+
