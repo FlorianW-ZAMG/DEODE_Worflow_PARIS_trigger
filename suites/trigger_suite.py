@@ -52,6 +52,7 @@ class TriggerSuiteDefinition(SuiteDefinition):
                     config,
                     self.task_settings,
                     self.ecf_files,
+                    variables={"ARGS": f"setup={exp}"},
 #                    trigger=trigger,
                     input_template=python_template,
                 )
