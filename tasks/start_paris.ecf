@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH --job-name=start_paris
+#SBATCH --account=msdeode
+#SBATCH --time=00:10:00
+#SBATCH --qos=nf
+#SBATCH --ntasks=1
+
+%include <head.h>
+
+export PATH="$HOME/.local/bin:$PATH"
+
+cd /home/kmw/projects/Deode-Prototype
+
+poetry run deode -h
+poetry run deode case ?deode/data/config_files/config.toml -o runme.tmp
+
+sed -e "s/2023-09-16T06:00:00Z/2024-06-20T00:00:00Z/g" \
+    -e "s/2023-09-16T00:00:00Z/2024-06-20T00:00:00Z/g" runme.tmp > runme.toml
+
+poetry run deode start suite --config-file runme.toml 
+
+%include <tail.h>
