@@ -11,12 +11,22 @@ export PATH="$HOME/.local/bin:$PATH"
 
 cd /home/kmw/projects/Deode-Prototype
 
+echo "Los gehts mit %YMD%"
+
+echo "Delay waere %DELAY%"
+rundate=$(date  -d "%YMD% -%DELAY% days" +"%%Y-%%m-%%d")
+echo "rundate ${rundate}"
+
+ecflow_client --label=info "Initialize for date ${rundate}"
+
 poetry run deode -h
 poetry run deode case ?deode/data/config_files/config.toml -o runme.tmp
 
-sed -e "s/2023-09-16T06:00:00Z/2024-06-20T00:00:00Z/g" \
-    -e "s/2023-09-16T00:00:00Z/2024-06-20T00:00:00Z/g" runme.tmp > runme.toml
+sed -e "s/2023-09-16T06:00:00Z/${rundate}T00:00:00Z/g" \
+    -e "s/2023-09-16T00:00:00Z/${rundate}T00:00:00Z/g" runme.tmp > runme.toml
 
 poetry run deode start suite --config-file runme.toml 
+
+sleep 30
 
 %include <tail.h>

@@ -1,4 +1,5 @@
 import os
+import datetime as dt
 import ecflow as ec
 
 def create_family_experiment(exp):
@@ -10,7 +11,7 @@ def create_family_experiment(exp):
 
 print("Creating suite definition")
 
-experiments = ["init_500m", "init_200m"]
+experiments = {"init_500m":1, "init_200m": 2}
 
 home = "/home/kmw/projects/Deode-Prototype/trigger_plugin"
 
@@ -33,10 +34,22 @@ defs = ec.Defs(
     )
 )
 
-for exp in experiments:
-    fam = defs.trigger_paris.add_family(exp)
+basetime = dt.datetime.today().date()
+trig_fam = defs.trigger_paris.add_family("initialize")
+trig_fam.add_repeat(ec.RepeatDate("YMD", 20240621, 20240622))
+
+#baseime = dt.datetime.strptime()
+for exp in experiments.keys():
+    #self.basetime = self.config["general.times.basetime"]
+    delay = experiments[exp]
+ #   rundate = basetime - dt.timedelta(days=experiments[exp])
+        #self.setup = self.config["task.args.setup"]
+    fam = trig_fam.add_family(exp)
     task = fam.add_task("start_paris")
+    task.add_variable("DELAY", experiments[exp])
+    task.add_label("info", "")
     task.add_cron(ec.Cron("07:00"))
+  
 
 print("Checking job creation: .ecf -> .job0")
 print(defs.check_job_creation())
