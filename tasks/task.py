@@ -1,11 +1,12 @@
 """SimplePluginExample."""
 
 import datetime as dt
+import os
 
 from deode.logs import logger
 from deode.tasks.base import Task
 from deode.datetime_utils import as_datetime
-
+from deode.tasks.batch import BatchJob
 #from ..methods import ExampleMethod
 
 class init_run(Task):
@@ -31,4 +32,6 @@ class init_run(Task):
         logger.info("delay: {}", self.delay[self.setup])
         rundate = as_datetime(self.basetime) - dt.timedelta(days=self.delay[self.setup])
         logger.info("rundate: {}", rundate.date())
-
+        batch = BatchJob(os.environ)
+        batch.run("which ls")
+        logger.info("DONE")

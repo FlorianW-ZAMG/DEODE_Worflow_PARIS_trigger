@@ -29,22 +29,19 @@ defs = ec.Defs(
         SCHOST="hpc",
         ECF_JOB_CMD=ecf_job_cmd,
         ECF_KILL_CMD=ecf_kill_cmd,
-        ECF_STATUS_CMD=ecf_status_cmd))
+        ECF_STATUS_CMD=ecf_status_cmd
+    )
+)
 
-#        #for exp in experiments:
-#        create_family_experiment("init_500m", init_date),
-#        create_family_experiment("init_200m", init_date)
-
-
-print(defs.trigger_paris)
-fam = defs.trigger_paris.add_family("init_500m")
-task = fam.add_task("start_paris")
-#task.add_cron("07:00")
+for exp in experiments:
+    fam = defs.trigger_paris.add_family(exp)
+    task = fam.add_task("start_paris")
+    task.add_cron(ec.Cron("07:00"))
 
 print("Checking job creation: .ecf -> .job0")
 print(defs.check_job_creation())
 
-print("Saving definition to file 'edf_suite.def'")
+print("Saving definition to file 'trigger_paris.def'")
 defs.save_as_defs("trigger_paris.def")
 
 # Start suite
