@@ -11,7 +11,12 @@ def create_family_experiment(exp):
 
 print("Creating suite definition")
 
-experiments = {"init_500m":1, "init_200m": 2}
+experiments = {"init_500m": {"delay": 1,
+                             "config" : "cy46h1_harmonie_arome_paris_500m_cold",
+                             "paris_suite": "PARIS_RDP_CY46h1_500M_cold"}, 
+               "init_200m": {"delay": 2,
+                             "config" : "cy46h1_harmonie_arome_paris_200m_warm",
+                             "paris_suite": "PARIS_RDP_CY46h1_200M_warm"}}
 
 home = "/home/kmw/projects/Deode-Prototype/trigger_plugin"
 
@@ -39,20 +44,31 @@ trig_fam = defs.trigger_paris.add_family("initialize")
 trig_fam.add_repeat(ec.RepeatDate("YMD", 20240621, 20240622))
 
 for exp in experiments.keys():
-    delay = experiments[exp]
   
     fam = trig_fam.add_family(exp)
-    fam.add_cron(ec.Cron("14:00"))
-
+    fam.add_cron(ec.Cron("08:40"))
+    
+    # Check whether suite is complete and we can safely run it for current date
     check_suites = fam.add_task("check_suites")
     check_suites.add_event(exp)
     check_suites.add_variable("SETUP", exp)
+    check_suites.add_variable("P_SUITE", experiments[exp]["paris_suite"])
+    check_suites.add_variable("STATE", "complete")
+
 
     task = fam.add_task("start_paris")
-    task.add_variable("DELAY", experiments[exp])
+    task.add_variable("DELAY", experiments[exp]["delay"])
+    task.add_variable("CONFIG", experiments[exp]["config"])
     task.add_label("info", "")
     task.add_trigger("check_suites == complete and check_suites:{0}".format(exp))
-  
+
+"""     check_suites = fam.add_task("safety_check")
+    check_suites.add_event(exp)
+    check_suites.add_variable("SETUP", exp)
+    check_suites.add_variable("P_SUITE", experiments[exp]["paris_suite"])
+    check_suites.add_variable("STATE", "running")
+    check_suites.add_trigger("start_paris == complete") """
+
 
 print("Checking job creation: .ecf -> .job0")
 print(defs.check_job_creation())
