@@ -1,5 +1,6 @@
 """Ecflow suites."""
 
+import ecflow as ec
 from pathlib import Path
 
 from deode.os_utils import deodemakedirs
@@ -46,6 +47,9 @@ class TriggerSuiteDefinition(SuiteDefinition):
                         self.suite,
                         self.ecf_files,
                     )
+            #trigger=EcflowSuiteTriggers([EcflowSuiteTrigger("{}:TIME ".format(init_fam), mode="15:00")])
+      #      trigger=EcflowSuiteTriggers([EcflowSuiteTrigger(init_fam,mode = "aborted")])
+
             task1 = EcflowSuiteTask(
                     "init_run",
                     init_fam,
@@ -53,10 +57,10 @@ class TriggerSuiteDefinition(SuiteDefinition):
                     self.task_settings,
                     self.ecf_files,
                     variables={"ARGS": f"setup={exp}"},
-#                    trigger=trigger,
+      #              trigger=trigger,
                     input_template=python_template,
                 )
-    
+          #  task1.add_trigger("/{}:TIME > 15:00".format(config["general.case"]))           
 #        trigger=EcflowSuiteTriggers([EcflowSuiteTrigger(task1)])
 #
 #        task1 = EcflowSuiteTask(

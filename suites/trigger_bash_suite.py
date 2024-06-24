@@ -38,17 +38,20 @@ basetime = dt.datetime.today().date()
 trig_fam = defs.trigger_paris.add_family("initialize")
 trig_fam.add_repeat(ec.RepeatDate("YMD", 20240621, 20240622))
 
-#baseime = dt.datetime.strptime()
 for exp in experiments.keys():
-    #self.basetime = self.config["general.times.basetime"]
     delay = experiments[exp]
- #   rundate = basetime - dt.timedelta(days=experiments[exp])
-        #self.setup = self.config["task.args.setup"]
+  
     fam = trig_fam.add_family(exp)
+    fam.add_cron(ec.Cron("14:00"))
+
+    check_suites = fam.add_task("check_suites")
+    check_suites.add_event(exp)
+    check_suites.add_variable("SETUP", exp)
+
     task = fam.add_task("start_paris")
     task.add_variable("DELAY", experiments[exp])
     task.add_label("info", "")
-    task.add_cron(ec.Cron("07:00"))
+    task.add_trigger("check_suites == complete and check_suites:{0}".format(exp))
   
 
 print("Checking job creation: .ecf -> .job0")
