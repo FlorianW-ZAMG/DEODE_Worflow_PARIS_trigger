@@ -1,0 +1,17 @@
+#!/bin/bash
+#SBATCH --job-name=start_paris
+#SBATCH --account=msdeode
+#SBATCH --time=00:10:00
+#SBATCH --qos=nf
+#SBATCH --ntasks=1
+
+%include <head.h>
+
+status=$(ecflow_client --query=state /%P_SUITE%)
+
+if [[ ${status} == "complete" ]]
+then
+    ecflow_client --event=%SETUP%
+fi
+
+%include <tail.h>
