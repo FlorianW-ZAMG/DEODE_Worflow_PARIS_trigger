@@ -9,7 +9,7 @@
 
 export PATH="$HOME/.local/bin:$PATH"
 
-cd /home/kmw/projects/Deode-Prototype
+cd %HOME%/../Deode_Prototype/PARIS_RDP
 
 rundate=$(date  -d "%YMD% -%DELAY% days" +"%%Y-%%m-%%d")
 echo "rundate ${rundate}"

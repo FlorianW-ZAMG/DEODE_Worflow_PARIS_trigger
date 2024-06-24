@@ -12,13 +12,13 @@ def create_family_experiment(exp):
 print("Creating suite definition")
 
 experiments = {"init_500m": {"delay": 1,
-                             "config" : "cy46h1_harmonie_arome_paris_500m_cold",
+                             "config": "cy46h1_harmonie_arome_paris_500m_cold",
                              "paris_suite": "PARIS_RDP_CY46h1_500M_cold"}, 
                "init_200m": {"delay": 2,
-                             "config" : "cy46h1_harmonie_arome_paris_200m_warm",
+                             "config": "cy46h1_harmonie_arome_paris_200m_warm",
                              "paris_suite": "PARIS_RDP_CY46h1_200M_warm"}}
 
-home = "/home/kmw/projects/Deode-Prototype/trigger_plugin"
+home = os.getcwd()
 
 ecf_job_cmd = "troika submit -o %ECF_JOBOUT% %SCHOST% %ECF_JOB%"
 ecf_kill_cmd = "troika kill %SCHOST% %ECF_JOB%"
@@ -35,7 +35,8 @@ defs = ec.Defs(
         SCHOST="hpc",
         ECF_JOB_CMD=ecf_job_cmd,
         ECF_KILL_CMD=ecf_kill_cmd,
-        ECF_STATUS_CMD=ecf_status_cmd
+        ECF_STATUS_CMD=ecf_status_cmd,
+        HOME=home
     )
 )
 
